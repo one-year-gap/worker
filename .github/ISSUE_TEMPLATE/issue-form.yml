@@ -1,5 +1,5 @@
 name: '이슈 생성'
-description: 'Repo에 이슈를 생성하며, 생성된 이슈는 Jira와 연동됩니다.(필수: type/arae/priority)'
+description: 'Repo에 이슈를 생성하며, 생성된 이슈는 Jira Workface와 연동됩니다.(필수: type/arae/priority/team)'
 labels: []
 title: '이슈 이름을 작성해주세요'
 body:
@@ -64,8 +64,32 @@ body:
         - "🧊 priority: P3"
     validations:
       required: true
+  - type: dropdown
+    id: team
+    attributes:
+      label: "Team (필수)"
+      description: "team을 선택하세요."
+      options:
+        - "Customer Team"
+        - "Counselor Team"
+        - "Admin Team"
+        - "Infra Team"
+        - "Auth Team"
+  - type: input
+    id: startDate
+    attributes:
+      label: '📅 시작 날짜'
+      placeholder: 'YYYY-MM-DD'
+    validations:
+      required: true
+  - type: input
+    id: endDate
+    attributes:
+      label: '🏁 종료 날짜'
+      placeholder: 'YYYY-MM-DD'
+    validations:
+      required: true
 
-  
   - type: textarea
     id: description
     attributes:
