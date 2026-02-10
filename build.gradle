@@ -39,7 +39,7 @@ def jacocoExcludes = [
 
 sonar {
     properties {
-        property "sonar.projectKey", "api-server-test"
+        property "sonar.projectKey", "one-year-gap_worker"
         property "sonar.organization", "one-year-gap"
         property "sonar.host.url", "https://sonarcloud.io"
 
