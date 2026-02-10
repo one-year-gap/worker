@@ -1,0 +1,7 @@
+spring:
+  config:
+    import:
+      - optional:classpath:postgres.local.yml
+  sql:
+    init:
+      mode: always

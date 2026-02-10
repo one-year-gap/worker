@@ -1,0 +1,10 @@
+spring:
+  config:
+    import:
+      - optional:classpath:postgres.prod.yml
+  sql:
+    init:
+      mode: never
+  batch:
+      jdbc:
+        initialize-schema: never
