@@ -1,0 +1,15 @@
+name: sync-sonar-qube
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  sonar:
+    uses: one-year-gap/infra/.github/workflows/sonar-qube.yml@main
+    secrets: inherit
+    with:
+      working-directory: "."
+      db-name: "worker_test"
+      db-user: "postgres"
+      db-password: "postgres"
