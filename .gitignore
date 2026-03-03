@@ -1,10 +1,12 @@
-﻿node_modules/
+node_modules/
 .idea/
 .DS_Store
 .env
 .env.*
 dist/
 build/
+.gradle/
+out/
 coverage/
 pnpm-debug.log*
 npm-debug.log*
