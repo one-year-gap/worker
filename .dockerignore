@@ -1,0 +1,10 @@
+.git
+.github
+.gradle
+.idea
+build
+node_modules
+
+*.iml
+README.md
+!docker-entrypoint.sh

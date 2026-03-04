@@ -1,18 +1,55 @@
 spring:
   application:
     name: worker
+  profiles:
+    default: local
 
+  #AWS Secret Manager
+  config:
+    import: "optional:aws-secretsmanager:holliverse/api-server/runtime"
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      stack:
+        auto: false
+
+  #Database setting
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5432/holliverse}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
-
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:20}
+      minimum-idle: ${DB_POOL_MIN:5}
+      connection-timeout: 3000
+      validation-timeout: 1000
   batch:
     job:
       enabled: false
     jdbc:
-      initialize-schema: ${SPRING_BATCH_INIT_SCHEMA:always}
+      initialize-schema: never
+
+  #Time
+  time:
+    format: "yyyy-MM-dd HH:mm:ss"
+    zone: "Asia/Seoul"
 
 server:
-  port: ${SERVER_PORT:8081}
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health,info
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        mongo.command.duration: true
