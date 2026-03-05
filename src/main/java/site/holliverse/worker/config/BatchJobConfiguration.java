@@ -19,7 +19,7 @@ public class BatchJobConfiguration {
     @Value("${spring.batch.job.name:}")
     private String jobName;
 
-    @Value("${spring.batch.testJob.startTime:}")
+    @Value("${BATCH_TEST_START_TIME:${spring.batch.testJob.startTime:}}")
     private String testJobStartTime;
 
     private final ObjectMapper mapper;
@@ -35,11 +35,10 @@ public class BatchJobConfiguration {
     /**
      * testJob -> Instant parsing
      */
-    public Instant getTestJobTimeAsInstant(){
-        if (testJobStartTime ==null || testJobStartTime.isBlank()){
-            throw new IllegalArgumentException("batch.testJob.startTime 값이 입력되지 않았습니다.");
+    public String resolveTestStartTime() {
+        if (testJobStartTime == null || testJobStartTime.isBlank()) {
+            return Instant.now().toString();
         }
-
-        return Instant.parse(testJobStartTime);
+        return Instant.parse(testJobStartTime).toString();
     }
 }

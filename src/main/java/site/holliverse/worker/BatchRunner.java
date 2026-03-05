@@ -1,6 +1,7 @@
 package site.holliverse.worker;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +9,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import site.holliverse.worker.config.BatchJobConfiguration;
 import site.holliverse.worker.config.TimeProperties;
+
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
@@ -45,14 +48,45 @@ public class BatchRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String jobName = configuration.getJobName();
-        log.info("Resolved spring.batch.job.name='{}'", configuration.getJobName());
 
-        switch (jobName) {
-            case "testJob":
-                log.info("TestJob");
-                break;
-            default:
-                throw new IllegalArgumentException("unknown job name!");
+        //jobName 검증
+        if (jobName == null || jobName.isBlank()) {
+            throw new IllegalArgumentException("spring.batch.job.name 값이 필요.");
         }
+
+        Job job = applicationContext.getBean(jobName, Job.class);
+
+        JobParametersBuilder params = new JobParametersBuilder()
+                .addString("requestedAt", ZonedDateTime.now(zoneId).format(formatter))
+                .addString("workflowRunId", System.getenv("WORKFLOW_RUN_ID"))
+                .addString("workflowExecutionId", System.getenv("WORKFLOW_EXECUTION_ID"));
+
+        if ("testJob".equals(jobName)) {
+            params.addString("testStartTime", configuration.resolveTestStartTime());
+        }
+
+        if (addRunId) {
+            params.addLong("run.id", System.currentTimeMillis());
+        }
+
+        JobExecution execution = jobLauncher.run(job, params.toJobParameters());
+
+        BatchStatus status = execution.getStatus();
+        String exitCode = execution.getExitStatus().getExitCode();
+
+        log.info("jobName={}, status={}, exitCode={}", jobName, status, exitCode);
+
+
+        //COMPLETED 아니면 예외
+        boolean completed = status == BatchStatus.COMPLETED
+                            && ExitStatus.COMPLETED.getExitCode().equals(exitCode);
+
+        if (!completed) {
+            throw new IllegalStateException(
+                    "Batch verification failed: status=" + status + ", exitCode=" + exitCode
+            );
+        }
+
+        log.info("Batch verification passed.");
     }
 }
