@@ -29,7 +29,7 @@ spring:
     job:
       enabled: false
     jdbc:
-      initialize-schema: never
+      initialize-schema: ${SPRING_BATCH_INIT_SCHEMA:always}
 
   #Time
   time:
