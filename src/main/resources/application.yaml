@@ -42,7 +42,7 @@ spring:
     zone: "Asia/Seoul"
 
 server:
-  port: 8080
+  port: 9000
 
 management:
   endpoints:
