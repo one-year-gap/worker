@@ -4,7 +4,7 @@ INSERT INTO analysis_dispatch_outbox (
     job_instance_id,
     chunk_id,
     analysis_version,
-    status,
+    dispatch_status,
     attempt_count,
     next_retry_at,
     last_error,
@@ -17,7 +17,7 @@ VALUES (
     :job_instance_id,
     :chunk_id,
     :analysis_version,
-    'READY'::dispatch_outbox_status,
+    'READY'::dispatch_status,
     0,
     NULL,
     NULL,
@@ -31,4 +31,4 @@ SET
     chunk_id = EXCLUDED.chunk_id,
     analysis_version = EXCLUDED.analysis_version,
     updated_at = NOW()
-RETURNING status::text;
+RETURNING dispatch_status::text;
