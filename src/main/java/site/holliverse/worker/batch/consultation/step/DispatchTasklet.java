@@ -47,8 +47,10 @@ public class DispatchTasklet implements Tasklet {
         );
         String chunkId = String.valueOf(claimToken);
 
-        if (claimToken < 0) throw new IllegalStateException("missing claim token");
-        if (claimedCount==0) return RepeatStatus.FINISHED;
+        if (claimToken < 0) {
+            throw new IllegalStateException("missing claim token");
+        }
+        if (claimedCount == 0) return RepeatStatus.FINISHED;
 
         //target 상담 데이터 조회
         List<DispatchTarget> targets = repository.findByClaimToken(claimToken);
@@ -92,7 +94,7 @@ public class DispatchTasklet implements Tasklet {
             try {
                 //kafka 발송
                 analysisKafkaTemplate.send(analysisRequestTopic, requestId, message).join();
-                //dispatch_outbox_status = 'SENT' 변경
+                //dispatch_status = 'SENT' 변경
                 outboxRepository.markSent(requestId);
                 published++;
             } catch (Exception ex) {

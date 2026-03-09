@@ -17,13 +17,13 @@ public class ConsultationAnalysisClaimRepository {
     /**
      * row 단위 선점 진행
      */
-    public List<Long> claimChunk(long analyzerVersion,long jobInstanceId,int chunkSize,int leaseSec,long claimToken){
+    public List<Long> claimChunk(long analyzerVersion, long jobInstanceId, int chunkSize, int leaseSec, long claimToken) {
         return jdbcClient.sql(sql.claimChunk())
-                .param("ver",analyzerVersion)
-                .param("job",jobInstanceId)
-                .param("chunk",chunkSize)
-                .param("lease_sec",leaseSec)
-                .param("claim_token",claimToken)
+                .param("ver", analyzerVersion)
+                .param("job", jobInstanceId)
+                .param("chunk", chunkSize)
+                .param("lease_sec", leaseSec)
+                .param("claim_token", claimToken)
                 .query((rs, rowNum) -> rs.getLong("analysis_id"))
                 .list();
     }
@@ -31,12 +31,14 @@ public class ConsultationAnalysisClaimRepository {
     /**
      * claimToken으로 조회
      */
-    public List<DispatchTarget> findByClaimToken(long claimToken){
-        if (claimToken<0L) return List.of();
+    public List<DispatchTarget> findByClaimToken(long claimToken) {
+        if (claimToken < 0L) {
+            return List.of();
+        }
 
         return jdbcClient.sql(sql.loadClaimedCase())
                 .param("claim_token", claimToken)
-                .query((rs,rowNum)->new DispatchTarget(
+                .query((rs, rowNum) -> new DispatchTarget(
                         rs.getLong("analysis_id"),
                         rs.getLong("case_id"),
                         rs.getLong("analyzer_version")
