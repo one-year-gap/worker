@@ -57,9 +57,8 @@ public class BatchRunner implements CommandLineRunner {
         Job job = applicationContext.getBean(jobName, Job.class);
 
         JobParametersBuilder params = new JobParametersBuilder()
-                .addString("requestedAt", ZonedDateTime.now(zoneId).format(formatter))
-                .addString("workflowRunId", System.getenv("WORKFLOW_RUN_ID"))
-                .addString("workflowExecutionId", System.getenv("WORKFLOW_EXECUTION_ID"));
+                .addString("requestedAt", ZonedDateTime.now(zoneId).format(formatter));
+
 
         if ("testJob".equals(jobName)) {
             params.addString("testStartTime", configuration.resolveTestStartTime());

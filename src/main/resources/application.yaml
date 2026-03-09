@@ -6,7 +6,11 @@ spring:
 
   #AWS Secret Manager
   config:
-    import: "optional:aws-secretsmanager:holliverse/api-server/runtime"
+    import:
+      - optional:aws-secretsmanager:holliverse/api-server/runtime
+      - classpath:application.worker.yml
+      - classpath:application.kafka.yml
+
   cloud:
     aws:
       region:
@@ -28,8 +32,8 @@ spring:
   batch:
     job:
       enabled: false
+      name: ${SPRING_BATCH_JOB_NAME:testJob}
     jdbc:
-      initialize-schema: ${SPRING_BATCH_INIT_SCHEMA:always}
 
   #Time
   time:
@@ -37,7 +41,6 @@ spring:
     zone: "Asia/Seoul"
 
 server:
-  port: 8080
 
 management:
   endpoints:
@@ -53,3 +56,11 @@ management:
     distribution:
       percentiles-histogram:
         mongo.command.duration: true
+
+logging:
+  level:
+    root: WARN
+    site.holliverse.worker: INFO
+    org.springframework.batch: INFO
+    org.springframework.kafka: WARN
+    org.apache.kafka: WARN

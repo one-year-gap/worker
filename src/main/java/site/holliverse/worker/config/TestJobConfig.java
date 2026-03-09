@@ -47,10 +47,13 @@ public class TestJobConfig {
                             //2. 출력 경로 검증
                             Path marker = markerPath();
                             Files.createDirectories(marker.getParent());
+                            String workflowRunId = firstNonBlank(
+                                    System.getenv("WORKFLOW_RUN_ID"),
+                                    "local"
+                            );
                             String payload = mapper.writeValueAsString(Map.of(
                                     "job", "testJob",
                                     "status", "COMPLETED",
-                                    "runId", System.getenv("WORKFLOW_RUN_ID"),
                                     "executedAt", Instant.now().toString()
                             ));
                             Files.writeString(
