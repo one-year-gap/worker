@@ -15,3 +15,4 @@ yarn-error.log*
 .gradle-home/
 logs/*
 !logs/.gitkeep
+.gradle-home/
