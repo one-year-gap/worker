@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context"
+                    name="jsonLogPath"
+                    source="worker.logging.json-file-path"
+                    defaultValue="./logs/worker.json"/>
+
+    <!-- ================================================================
+         local 프로파일
+         ================================================================ -->
+    <springProfile name="local">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) [%X{jobName:-}/%X{stepName:-}] - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${jsonLogPath}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${jsonLogPath}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+                <maxFileSize>50MB</maxFileSize>
+                <maxHistory>7</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"application":"worker","environment":"local"}</customFields>
+                <mdcKeyFieldName>jobName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobInstanceId</mdcKeyFieldName>
+                <mdcKeyFieldName>stepName</mdcKeyFieldName>
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</timestampPattern>
+                <timeZone>UTC</timeZone>
+            </encoder>
+        </appender>
+
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE_JSON"/>
+        </root>
+        <logger name="site.holliverse.worker" level="INFO"/>
+        <logger name="org.springframework.batch" level="INFO"/>
+        <logger name="org.springframework.kafka" level="WARN"/>
+        <logger name="org.apache.kafka" level="WARN"/>
+    </springProfile>
+
+    <!-- ================================================================
+         non-local 프로파일
+         ================================================================ -->
+    <springProfile name="!local">
+        <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <!-- Loki stream label로 사용할 고정 필드 -->
+                <customFields>{"application":"worker"}</customFields>
+
+                <!-- MDC 키를 최상위 JSON 필드로 승격 (label 쿼리 용이성) -->
+                <mdcKeyFieldName>jobName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobInstanceId</mdcKeyFieldName>
+                <mdcKeyFieldName>stepName</mdcKeyFieldName>
+
+                <!-- 타임스탬프 필드명 Loki 권장 형식 -->
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</timestampPattern>
+                <timeZone>KST</timeZone>
+
+                <!-- 불필요한 필드 제거 -->
+                <excludeMdcKeyName>_unused</excludeMdcKeyName>
+            </encoder>
+        </appender>
+
+        <root level="WARN">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </root>
+        <logger name="site.holliverse.worker" level="INFO"/>
+        <logger name="org.springframework.batch" level="INFO"/>
+        <logger name="org.springframework.kafka" level="WARN"/>
+        <logger name="org.apache.kafka" level="WARN"/>
+    </springProfile>
+
+</configuration>
