@@ -73,9 +73,6 @@ public class BatchRunner implements CommandLineRunner {
         BatchStatus status = execution.getStatus();
         String exitCode = execution.getExitStatus().getExitCode();
 
-        log.info("jobName={}, status={}, exitCode={}", jobName, status, exitCode);
-
-
         //COMPLETED 아니면 예외
         boolean completed = status == BatchStatus.COMPLETED
                             && ExitStatus.COMPLETED.getExitCode().equals(exitCode);
@@ -85,7 +82,5 @@ public class BatchRunner implements CommandLineRunner {
                     "Batch verification failed: status=" + status + ", exitCode=" + exitCode
             );
         }
-
-        log.info("Batch verification passed.");
     }
 }
