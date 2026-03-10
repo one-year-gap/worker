@@ -33,6 +33,7 @@ dependencies {
 	implementation group: 'com.github.f4b6a3', name: 'tsid-creator', version: '5.2.6'
 	implementation 'org.springframework.kafka:spring-kafka'
     implementation 'software.amazon.msk:aws-msk-iam-auth:2.2.0'
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
