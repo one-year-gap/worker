@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
+import site.holliverse.worker.batch.common.listener.BatchJobExecutionListener;
+import site.holliverse.worker.batch.common.listener.BatchStepExecutionListener;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,6 +30,8 @@ import java.util.Map;
 public class TestJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+    private final BatchJobExecutionListener batchJobExecutionListener;
+    private final BatchStepExecutionListener batchStepExecutionListener;
     private final JdbcTemplate jdbcTemplate;
     private final ObjectMapper mapper;
 
@@ -35,7 +39,9 @@ public class TestJobConfig {
     public Job testJob() {
         //RunTime 검증을 위한 testJob 구성
         return new JobBuilder("testJob", jobRepository)
+                .listener(batchJobExecutionListener)
                 .start(new StepBuilder("testStep", jobRepository)
+                        .listener(batchStepExecutionListener)
                         .tasklet((contribution, chunkContext) -> {
                             //1. DB 연결 검증
                             Integer ping = jdbcTemplate.queryForObject("select 1", Integer.class);
