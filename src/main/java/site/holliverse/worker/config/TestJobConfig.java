@@ -70,8 +70,6 @@ public class TestJobConfig {
                                     StandardOpenOption.CREATE,
                                     StandardOpenOption.TRUNCATE_EXISTING
                             );
-
-                            log.info("verification marker written: {}", marker);
                             contribution.setExitStatus(ExitStatus.COMPLETED);
 
                             return RepeatStatus.FINISHED;

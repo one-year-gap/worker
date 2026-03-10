@@ -14,7 +14,6 @@ public class BatchStepExecutionListener implements StepExecutionListener {
     @Override
     public void beforeStep(StepExecution stepExecution) {
         BatchLogContext.putStep(stepExecution);
-        log.info("step started");
     }
 
     @Override

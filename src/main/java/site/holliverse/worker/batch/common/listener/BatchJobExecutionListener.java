@@ -13,7 +13,6 @@ public class BatchJobExecutionListener implements JobExecutionListener {
     @Override
     public void beforeJob(JobExecution jobExecution) {
         BatchLogContext.putJob(jobExecution);
-        log.info("job started");
     }
 
     @Override
