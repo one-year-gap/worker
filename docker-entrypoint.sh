@@ -42,4 +42,4 @@ echo "[entrypoint] SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-container}"
 echo "[entrypoint] SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}"
 echo "[entrypoint] SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}"
 
-exec java -jar /app/app.jar
+exec java -jar /app/app.jar "$@"

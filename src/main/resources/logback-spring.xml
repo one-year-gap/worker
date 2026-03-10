@@ -24,9 +24,9 @@
             </rollingPolicy>
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
                 <customFields>{"application":"worker","environment":"local"}</customFields>
-                <mdcKeyFieldName>jobName</mdcKeyFieldName>
-                <mdcKeyFieldName>jobInstanceId</mdcKeyFieldName>
-                <mdcKeyFieldName>stepName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobName=jobName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobInstanceId=jobInstanceId</mdcKeyFieldName>
+                <mdcKeyFieldName>stepName=stepName</mdcKeyFieldName>
                 <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</timestampPattern>
                 <timeZone>UTC</timeZone>
             </encoder>
@@ -52,9 +52,9 @@
                 <customFields>{"application":"worker"}</customFields>
 
                 <!-- MDC 키를 최상위 JSON 필드로 승격 (label 쿼리 용이성) -->
-                <mdcKeyFieldName>jobName</mdcKeyFieldName>
-                <mdcKeyFieldName>jobInstanceId</mdcKeyFieldName>
-                <mdcKeyFieldName>stepName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobName=jobName</mdcKeyFieldName>
+                <mdcKeyFieldName>jobInstanceId=jobInstanceId</mdcKeyFieldName>
+                <mdcKeyFieldName>stepName=stepName</mdcKeyFieldName>
 
                 <!-- 타임스탬프 필드명 Loki 권장 형식 -->
                 <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</timestampPattern>
