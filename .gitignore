@@ -13,4 +13,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .gradle-home/
+logs/*
+!logs/.gitkeep
 docs/private/

@@ -57,9 +57,8 @@ public class BatchRunner implements CommandLineRunner {
         Job job = applicationContext.getBean(jobName, Job.class);
 
         JobParametersBuilder params = new JobParametersBuilder()
-                .addString("requestedAt", ZonedDateTime.now(zoneId).format(formatter))
-                .addString("workflowRunId", System.getenv("WORKFLOW_RUN_ID"))
-                .addString("workflowExecutionId", System.getenv("WORKFLOW_EXECUTION_ID"));
+                .addString("requestedAt", ZonedDateTime.now(zoneId).format(formatter));
+
 
         if ("testJob".equals(jobName)) {
             params.addString("testStartTime", configuration.resolveTestStartTime());
@@ -74,9 +73,6 @@ public class BatchRunner implements CommandLineRunner {
         BatchStatus status = execution.getStatus();
         String exitCode = execution.getExitStatus().getExitCode();
 
-        log.info("jobName={}, status={}, exitCode={}", jobName, status, exitCode);
-
-
         //COMPLETED 아니면 예외
         boolean completed = status == BatchStatus.COMPLETED
                             && ExitStatus.COMPLETED.getExitCode().equals(exitCode);
@@ -86,7 +82,5 @@ public class BatchRunner implements CommandLineRunner {
                     "Batch verification failed: status=" + status + ", exitCode=" + exitCode
             );
         }
-
-        log.info("Batch verification passed.");
     }
 }

@@ -6,7 +6,11 @@ spring:
 
   #AWS Secret Manager
   config:
-    import: "optional:aws-secretsmanager:holliverse/api-server/runtime"
+    import:
+      - optional:aws-secretsmanager:holliverse/api-server/runtime
+      - classpath:application.worker.yml
+      - classpath:application.kafka.yml
+
   cloud:
     aws:
       region:
@@ -25,11 +29,6 @@ spring:
       minimum-idle: ${DB_POOL_MIN:5}
       connection-timeout: 3000
       validation-timeout: 1000
-  batch:
-    job:
-      enabled: false
-    jdbc:
-      initialize-schema: ${SPRING_BATCH_INIT_SCHEMA:always}
 
   #Time
   time:
@@ -37,19 +36,29 @@ spring:
     zone: "Asia/Seoul"
 
 server:
-  port: 8080
+  port: 9000
 
 management:
   endpoints:
     web:
       exposure:
-        include: prometheus,health,info
+        include: prometheus,health,info,metrics
   endpoint:
     prometheus:
       enabled: true
   metrics:
     tags:
+      app: worker
+      profile: ${SPRING_PROFILES_ACTIVE:unknown}
       application: ${spring.application.name}
     distribution:
       percentiles-histogram:
         mongo.command.duration: true
+
+logging:
+  level:
+    root: INFO
+    site.holliverse.worker: INFO
+    org.springframework.batch: INFO
+    org.springframework.kafka: WARN
+    org.apache.kafka: WARN

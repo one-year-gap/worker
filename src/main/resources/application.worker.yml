@@ -1,0 +1,34 @@
+########################################
+# Job / Step setting
+########################################
+worker:
+  id:
+    tsid-node: ${TSID_NODE:0}
+  logging:
+    json-file-path: ${WORKER_LOG_JSON_FILE_PATH:./logs/worker.json}
+  kafka:
+    topic:
+      analysis-request: ${ANALYSIS_REQUEST_TOPIC:analysis.request.v1}
+    outbox:
+      max-attempts: ${ANALYSIS_DISPATCH_MAX_ATTEMPTS:3}
+  job:
+    consultation-analysis:
+      #AWS ECR counselling-analytics image version
+      analyzer-version: ${ANALYZER_VERSION:1}
+      # CounselKeywordAna
+      claim-chunk-size: ${ANALYZER_CLAIM_CHUNK_SIZE:1000}
+      #Consultation Analysis
+      claim-lease-sec: ${ANALYSIS_CLAIM_LEASE_TTL:1800}
+      #alias dictionary
+      alias-dictionary-path: ${ANALYSIS_ALIAS_DICTIONARY_PATH:/efs/analysis/alias-dictionary.json}
+
+########################################
+# Spring Batch setting
+########################################
+spring:
+  batch:
+    job:
+      enabled: false
+      name: ${SPRING_BATCH_JOB_NAME:testJob}
+    jdbc:
+      initialize-schema: never
