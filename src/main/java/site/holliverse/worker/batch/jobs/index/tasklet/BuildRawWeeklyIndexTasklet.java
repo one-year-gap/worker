@@ -60,8 +60,8 @@ public class BuildRawWeeklyIndexTasklet implements Tasklet {
         int deleted = namedParameterJdbcTemplate.update(deleteSql, params);
         int inserted = namedParameterJdbcTemplate.update(insertSql, params);
 
-        log.info("BuildRaw 완료. snapshotDate={}, yyyymm={}, deleted={}, inserted={}",
-                snapshotDate, yyyymm, deleted, inserted);
+        /*log.info("BuildRaw 완료. snapshotDate={}, yyyymm={}, deleted={}, inserted={}",
+                snapshotDate, yyyymm, deleted, inserted);*/
 
         return RepeatStatus.FINISHED;
     }

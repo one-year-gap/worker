@@ -82,7 +82,7 @@ public class GateWeeklyIndexTasklet implements Tasklet {
         // 4) 필수 테이블 존재 여부를 확인한다.
         verifyRequiredTables();
 
-        log.info("Gate 통과. snapshotDate={}, yyyymm={}", snapshotDate, yyyymm);
+        //log.info("Gate 통과. snapshotDate={}, yyyymm={}", snapshotDate, yyyymm);
         return RepeatStatus.FINISHED;
     }
 

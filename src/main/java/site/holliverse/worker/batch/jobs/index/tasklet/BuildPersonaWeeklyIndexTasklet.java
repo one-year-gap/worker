@@ -55,8 +55,8 @@ public class BuildPersonaWeeklyIndexTasklet implements Tasklet {
         int deleted = namedParameterJdbcTemplate.update(deleteSql, params);
         int inserted = namedParameterJdbcTemplate.update(insertSql, params);
 
-        log.info("BuildPersona 완료. snapshotDate={}, deleted={}, inserted={}",
-                snapshotDate, deleted, inserted);
+        /*log.info("BuildPersona 완료. snapshotDate={}, deleted={}, inserted={}",
+                snapshotDate, deleted, inserted);*/
 
         return RepeatStatus.FINISHED;
     }

@@ -77,7 +77,7 @@ public class VerifyWeeklyIndexTasklet implements Tasklet {
             throw new IllegalStateException("Persona null 검증에 실패했습니다. nullCount=" + personaNullCount);
         }
 
-        log.info(
+        /*log.info(
                 "Verify 완료. snapshotDate={}, memberCount={}, rawCount={}, tscoreCount={}, personaCount={}, tscoreNullCount={}, personaNullCount={}",
                 snapshotDate,
                 memberCount,
@@ -86,7 +86,7 @@ public class VerifyWeeklyIndexTasklet implements Tasklet {
                 personaCount,
                 tscoreNullCount,
                 personaNullCount
-        );
+        );*/
 
         return RepeatStatus.FINISHED;
     }

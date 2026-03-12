@@ -50,8 +50,8 @@ public class BuildTScoreWeeklyIndexTasklet implements Tasklet {
         int deleted = namedParameterJdbcTemplate.update(deleteSql, params);
         int inserted = namedParameterJdbcTemplate.update(insertSql, params);
 
-        log.info("BuildTScore 완료. snapshotDate={}, deleted={}, inserted={}",
-                snapshotDate, deleted, inserted);
+        /*log.info("BuildTScore 완료. snapshotDate={}, deleted={}, inserted={}",
+                snapshotDate, deleted, inserted);*/
 
         return RepeatStatus.FINISHED;
     }
