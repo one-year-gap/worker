@@ -16,3 +16,4 @@ yarn-error.log*
 logs/*
 !logs/.gitkeep
 docs/private/
+.gradle-home/
