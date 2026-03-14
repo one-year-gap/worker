@@ -9,6 +9,8 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+import site.holliverse.worker.batch.common.listener.BatchJobExecutionListener;
+import site.holliverse.worker.batch.common.listener.BatchStepExecutionListener;
 import site.holliverse.worker.batch.jobs.memberllmcontext.tasklet.BuildMemberLlmContextTasklet;
 import site.holliverse.worker.batch.jobs.memberllmcontext.tasklet.MemberLlmContextGateTasklet;
 import site.holliverse.worker.batch.jobs.memberllmcontext.tasklet.VerifyMemberLlmContextTasklet;
@@ -27,6 +29,9 @@ public class MemberLlmContextJobConfig {
 
     public static final String JOB_NAME = "memberLlmContextJob";
 
+    private final BatchJobExecutionListener batchJobExecutionListener;
+    private final BatchStepExecutionListener batchStepExecutionListener;
+
     @Bean
     public Job memberLlmContextJob(
             JobRepository jobRepository,
@@ -35,6 +40,7 @@ public class MemberLlmContextJobConfig {
             Step memberLlmContextVerifyStep
     ) {
         return new JobBuilder(JOB_NAME, jobRepository)
+                .listener(batchJobExecutionListener)
                 .start(memberLlmContextGateStep)
                 .next(memberLlmContextUpsertStep)
                 .next(memberLlmContextVerifyStep)
@@ -51,6 +57,7 @@ public class MemberLlmContextJobConfig {
             MemberLlmContextGateTasklet tasklet
     ) {
         return new StepBuilder("Step00_Gate", jobRepository)
+                .listener(batchStepExecutionListener)
                 .tasklet(tasklet, tx)
                 .build();
     }
@@ -65,6 +72,7 @@ public class MemberLlmContextJobConfig {
             BuildMemberLlmContextTasklet tasklet
     ) {
         return new StepBuilder("Step01_UpsertMemberLlmContext", jobRepository)
+                .listener(batchStepExecutionListener)
                 .tasklet(tasklet, tx)
                 .build();
     }
@@ -79,6 +87,7 @@ public class MemberLlmContextJobConfig {
             VerifyMemberLlmContextTasklet tasklet
     ) {
         return new StepBuilder("Step02_Verify", jobRepository)
+                .listener(batchStepExecutionListener)
                 .tasklet(tasklet, tx)
                 .build();
     }
