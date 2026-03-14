@@ -75,6 +75,14 @@ public class MemberLlmContextGateTasklet implements Tasklet {
         return RepeatStatus.FINISHED;
     }
 
+    /**
+     * snapshotDate를 yyyy-MM-dd 형식으로 파싱한다.
+     * 값이 없으면 한국 시간 기준 오늘 날짜를 사용한다.
+     *
+     * 예외 처리 이유:
+     * - 배치 기준일이 잘못되면 이후 usage, 로그 14일 범위, 약정 계산이 전부 틀어진다.
+     * - 그래서 형식이 맞지 않으면 조용히 보정하지 않고 즉시 실패시킨다.
+     */
     private LocalDate resolveSnapshotDate(String snapshotDateParam) {
         if (snapshotDateParam == null || snapshotDateParam.isBlank()) {
             return LocalDate.now(KST);
@@ -83,13 +91,20 @@ public class MemberLlmContextGateTasklet implements Tasklet {
         try {
             return LocalDate.parse(snapshotDateParam);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid snapshotDate. Use yyyy-MM-dd format.", e);
+            throw new IllegalArgumentException(
+                    "snapshotDate 파라미터 형식이 올바르지 않습니다. yyyy-MM-dd 형식을 사용하세요.",
+                    e
+            );
         }
     }
 
     /**
      * 필수 테이블이 하나라도 빠져 있으면 즉시 실패시키되,
      * 운영에서 한 번에 원인을 볼 수 있도록 누락 목록 전체를 함께 보여준다.
+     *
+     * 예외 처리 이유:
+     * - 이 잡은 여러 테이블을 동시에 조인하므로 필수 테이블 하나만 없어도 중간 step에서 실패한다.
+     * - Upsert step까지 갔다가 SQL 오류로 터지는 것보다 Gate 단계에서 빠르게 실패시키는 편이 원인 파악이 쉽다.
      */
     private void verifyRequiredTables() {
         List<String> missingTables = new ArrayList<>();
@@ -101,7 +116,9 @@ public class MemberLlmContextGateTasklet implements Tasklet {
         }
 
         if (!missingTables.isEmpty()) {
-            throw new IllegalStateException("Missing required tables: " + String.join(", ", missingTables));
+            throw new IllegalStateException(
+                    "member_llm_context 배치 실행에 필요한 테이블이 없습니다: " + String.join(", ", missingTables)
+            );
         }
     }
 }
