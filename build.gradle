@@ -30,6 +30,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation platform('software.amazon.awssdk:bom:2.31.67')
+	implementation 'software.amazon.awssdk:athena'
 	implementation group: 'com.github.f4b6a3', name: 'tsid-creator', version: '5.2.6'
 	implementation 'org.springframework.kafka:spring-kafka'
     implementation 'software.amazon.msk:aws-msk-iam-auth:2.2.0'
