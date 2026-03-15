@@ -64,6 +64,11 @@ public class BatchRunner implements CommandLineRunner {
             params.addString("testStartTime", configuration.resolveTestStartTime());
         }
 
+        String snapshotDate = configuration.resolveSnapshotDate();
+        if (snapshotDate != null) {
+            params.addString("snapshotDate", snapshotDate);
+        }
+
         if (addRunId) {
             params.addLong("run.id", System.currentTimeMillis());
         }

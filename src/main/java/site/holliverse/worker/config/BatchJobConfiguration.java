@@ -22,6 +22,9 @@ public class BatchJobConfiguration {
     @Value("${BATCH_TEST_START_TIME:${spring.batch.testJob.startTime:}}")
     private String testJobStartTime;
 
+    @Value("${SNAPSHOT_DATE:${BATCH_SNAPSHOT_DATE:${spring.batch.job.snapshotDate:}}}")
+    private String snapshotDate;
+
     private final ObjectMapper mapper;
 
     @PostConstruct
@@ -29,6 +32,7 @@ public class BatchJobConfiguration {
         log.info("========= Batch Configuration =========");
         log.info("jobName: '{}'", jobName);
         log.info("job1StartTime: '{}'", testJobStartTime);
+        log.info("snapshotDate: '{}'", snapshotDate);
         log.info("=======================================");
     }
 
@@ -40,5 +44,12 @@ public class BatchJobConfiguration {
             return Instant.now().toString();
         }
         return Instant.parse(testJobStartTime).toString();
+    }
+
+    public String resolveSnapshotDate() {
+        if (snapshotDate == null || snapshotDate.isBlank()) {
+            return null;
+        }
+        return snapshotDate;
     }
 }
