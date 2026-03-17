@@ -83,9 +83,9 @@ latest_churn AS (
     SELECT DISTINCT ON (c.member_id)
         c.member_id,
         c.churn_score,
-        c.churn_tier
+        c.risk_level AS churn_tier
     FROM churn_score_snapshot c
-    ORDER BY c.member_id, c.snapshot_date DESC
+    ORDER BY c.member_id, c.base_date DESC
 ),
 latest_logs_14d AS (
     -- 행동 로그는 최근 14일 이내 데이터만 허용하고 그중 최신 1건을 사용한다.
