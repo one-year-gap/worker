@@ -19,7 +19,15 @@ public class S3OutputLocationParser {
         }
 
         String withoutScheme = s3Uri.substring("s3://".length());
+        if (withoutScheme.isBlank()) {
+            throw new IllegalArgumentException("Invalid S3 URI: " + s3Uri);
+        }
+
         int firstSlash = withoutScheme.indexOf('/');
+
+        if (firstSlash == 0) {
+            throw new IllegalArgumentException("Invalid S3 URI: " + s3Uri);
+        }
 
         if (firstSlash < 0) {
             return new ParsedS3Path(withoutScheme, "");
